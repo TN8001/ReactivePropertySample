@@ -61,7 +61,7 @@ namespace ReactivePropertySample_VVM.ViewModels
             Rank = IsGod.Select(isGod => isGod ? "神" : "✨🤪✨").ToReadOnlyReactiveProperty<string>().AddTo(disposable);
             FontSize = IsGod.Select(isGod => isGod ? 80: 50).ToReadOnlyReactiveProperty().AddTo(disposable);
 
-            SaveCommand = new ReactiveCommand().WithSubscribe(model.SaveSettings);
+            SaveCommand = IsGod.ToReactiveCommand().WithSubscribe(model.SaveSettings).AddTo(disposable);
         }
     }
 }
