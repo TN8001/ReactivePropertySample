@@ -28,7 +28,11 @@
         <TextBox
             Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="80" Width="{Binding ViewWidth.Value}"
             TextAlignment="Center"
-            Text="{Binding Name.Value, UpdateSourceTrigger=PropertyChanged}"/>
+            Text="{Binding Name.Value, UpdateSourceTrigger=PropertyChanged}">
+            <i:Interaction.Behaviors>
+                <b:OnlyNumberTextBoxBehavior/>
+            </i:Interaction.Behaviors>
+        </TextBox>
         <TextBlock 
             Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="{Binding FontSize.Value}"
             Text="{Binding Rank.Value}"/>
