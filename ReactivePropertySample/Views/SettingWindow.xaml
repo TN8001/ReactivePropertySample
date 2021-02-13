@@ -1,45 +1,78 @@
-﻿<Window x:Class="ReactivePropertySample_VVM.Views.SettingWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:vm="clr-namespace:ReactivePropertySample_VVM.ViewModels"
-        xmlns:b="clr-namespace:ReactivePropertySample_VVM.Behaviors"
-        mc:Ignorable="d"
-        Title="SettingWindow"
-        Width="{Binding ViewWidth.Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-        Height="{Binding ViewHeight.Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-        Left="{Binding ViewX.Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-        Top="{Binding ViewY.Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
-    <i:Interaction.Behaviors>
-        <b:ViewModelDisposeBehavior/>
-    </i:Interaction.Behaviors>
-    <Window.DataContext>
-        <vm:SettingViewModel/>
-    </Window.DataContext>
+﻿<Window
+  x:Class="ReactivePropertySample.Views.SettingWindow"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+  xmlns:viewModels="clr-namespace:ReactivePropertySample.ViewModels"
+  xmlns:views="clr-namespace:ReactivePropertySample.Views"
+  Width="{Binding View.Width.Value, Mode=TwoWay}"
+  Height="{Binding View.Height.Value, Mode=TwoWay}"
+  Left="{Binding View.X.Value, Mode=TwoWay}"
+  Top="{Binding View.Y.Value, Mode=TwoWay}">
+  
+  <i:Interaction.Triggers>
+    <i:EventTrigger EventName="Closing">
+      <i:InvokeCommandAction Command="{Binding ClosingCommand}" />
+    </i:EventTrigger>
+  </i:Interaction.Triggers>
+  
+  <Window.Resources>
+    <views:FontSizeConverter x:Key="FontSizeConverter" />
+  </Window.Resources>
+
+  <Window.DataContext>
+    <viewModels:SettingViewModel />
+  </Window.DataContext>
+
+  <UniformGrid Columns="1">
+    <TextBox
+      FontSize="{Binding ActualHeight, RelativeSource={RelativeSource self}, Converter={StaticResource FontSizeConverter}}"
+      Text="{Binding View.Name.Value, UpdateSourceTrigger=PropertyChanged}"
+      TextAlignment="Center" />
+
+    <Viewbox>
+      <ContentPresenter Content="{Binding IsGod.Value}">
+        <ContentPresenter.ContentTemplate>
+          <DataTemplate>
+            <TextBlock x:Name="textBlock" Text="神" />
+            <DataTemplate.Triggers>
+              <DataTrigger Binding="{Binding}" Value="False">
+                <Setter TargetName="textBlock" Property="Text" Value="✨🤪✨" />
+                <Setter TargetName="textBlock" Property="Margin" Value="0,10" />
+              </DataTrigger>
+            </DataTemplate.Triggers>
+          </DataTemplate>
+        </ContentPresenter.ContentTemplate>
+      </ContentPresenter>
+    </Viewbox>
+
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <TextBox
-            Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="80" Width="{Binding ViewWidth.Value}"
-            TextAlignment="Center"
-            Text="{Binding Name.Value, UpdateSourceTrigger=PropertyChanged}">
-            <i:Interaction.Behaviors>
-                <b:OnlyNumberTextBoxBehavior/>
-            </i:Interaction.Behaviors>
-        </TextBox>
-        <TextBlock 
-            Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="{Binding FontSize.Value}"
-            Text="{Binding Rank.Value}"/>
-        <TextBlock 
-            Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30"
-            Text="{Binding ViewRectInfo.Value}"/>
-        <Button Grid.Row="3" FontSize="80" Content="保存"
-                Command="{Binding SaveCommand}"/>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition />
+        <ColumnDefinition />
+      </Grid.ColumnDefinitions>
+      <Border x:Name="dummy" />
+      <Viewbox
+        Grid.ColumnSpan="2"
+        Width="{Binding ActualWidth, ElementName=dummy}"
+        HorizontalAlignment="Center">
+        <TextBlock>
+          <TextBlock.Text>
+            <MultiBinding StringFormat="W:{0}, H{1}, X:{2}, Y:{3}">
+              <Binding Path="View.Width.Value" />
+              <Binding Path="View.Height.Value" />
+              <Binding Path="View.X.Value" />
+              <Binding Path="View.Y.Value" />
+            </MultiBinding>
+          </TextBlock.Text>
+        </TextBlock>
+      </Viewbox>
     </Grid>
+
+    <Button Command="{Binding SaveCommand}">
+      <Viewbox>
+        <TextBlock Text="保存" />
+      </Viewbox>
+    </Button>
+  </UniformGrid>
 </Window>

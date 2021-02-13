@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ReactivePropertySample_M\ReactivePropertySample_M.csproj" />
+    <ProjectReference Include="..\ReactivePropertySample.Core\ReactivePropertySample.Core.csproj" />
   </ItemGroup>
 
 </Project>
